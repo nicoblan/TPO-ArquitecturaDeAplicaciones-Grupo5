@@ -1,4 +1,11 @@
 spring:
+  datasource:
+    url: jdbc:h2:mem:orderdb-test;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
   cloud:
     discovery:
       enabled: false
@@ -12,3 +19,6 @@ spring:
 eureka:
   client:
     enabled: false
+
+jwt:
+  secret: test-secret-for-order-service-hs256-32chars-minimum

@@ -4,31 +4,34 @@ server:
 spring:
   application:
     name: order-service
-  profiles:
-    active: rabbitmq
   datasource:
-    url: jdbc:h2:mem:orderdb
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:orderdb}
     driverClassName: org.h2.Driver
-    username: sa
-    password: 
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 
-# Configuración personalizada de Seguridad
 jwt:
-  secret: "MiClaveSecretaSuperSeguraQueDebeCoincidirConLaDeAuthService123456"
+  secret: ${JWT_SECRET:clave-local-solo-para-desarrollo-order-service-hs256-32chars-minimo}
 
 eureka:
   client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
 
 logging:
   level:
