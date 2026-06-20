@@ -1,36 +1,33 @@
-# Order Service - Proyecto Arquitectura de Aplicaciones (UADE 2026)
+# order-service
 
-Este microservicio es responsable de la gestión de pedidos dentro del ecosistema de microservicios de la materia.
+Microservicio de pedidos del TP de Arquitectura de Aplicaciones.
 
-## 🚀 Tecnologías
-- **Java 17** con **Spring Boot 3.2.4**
-- **Spring Cloud** (Eureka Client, Gateway support)
-- **Spring Security + JWT** (Validación de tokens descentralizada)
-- **RabbitMQ** (Comunicación asíncrona)
-- **JPA / Hibernate** con base de datos H2 (en memoria)
+Para el contrato de integracion y el material del SAD, ver:
 
-## 🏗️ Arquitectura
-El servicio sigue el patrón **Database per Service** y utiliza una arquitectura de capas tradicional, integrándose asíncronamente con el resto del ecosistema mediante el patrón **Saga (Coreografía)** para asegurar la consistencia eventual con el inventario.
+- `../docs/CONTRATO-INTEGRACION.md`
+- `../docs/APORTE-SAD-ORDER-SERVICE.md`
 
-## ⚙️ Cómo ejecutar
-1. Asegúrate de tener **Docker Desktop** corriendo.
-2. Levanta la infraestructura necesaria (RabbitMQ):
-   ```bash
-   docker-compose up -d
-   ```
-3. Compila y ejecuta el servicio:
-   ```bash
-   mvn clean install
-   ```
-   ```bash
-   mvn spring-boot:run
-   ```
+## Comandos principales
 
-## 🔒 Seguridad
-Los endpoints bajo `/api/orders/**` requieren un token JWT válido emitido por el `auth-service`. 
-El token debe enviarse en el header:
-`Authorization: Bearer <TU_TOKEN>`
+```bash
+mvn clean test
+```
 
-## 📈 Endpoints
-- `POST /api/orders`: Crea un nuevo pedido y publica el evento `order.created` en RabbitMQ.
-- `GET /api/orders/test`: Endpoint de verificación de salud y seguridad.
+```bash
+mvn spring-boot:run
+```
+
+Health publico:
+
+```bash
+curl http://localhost:8082/actuator/health
+```
+
+Crear orden:
+
+```bash
+curl -i -X POST http://localhost:8082/api/orders \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"skuCode":"IPHONE15","quantity":2}'
+```
