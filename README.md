@@ -1,6 +1,6 @@
 # 🛒 Order Service - Proyecto Arquitectura de Aplicaciones (UADE 2026)
 
-Este microservicio es responsable de la **gestión de pedidos** dentro del ecosistema de microservicios de la materia.
+Este workspace contiene el microservicio nuevo del TP: **order-service**. El ecosistema base de la consigna debe existir en módulos o repositorios aparte para completar la demo total.
 
 ---
 
@@ -21,6 +21,24 @@ El servicio sigue el patrón **Database per Service** y utiliza una **arquitectu
 Se integra de forma asíncrona con el resto del ecosistema mediante el patrón:
 
 - **Saga (Coreografía)** → para asegurar la **consistencia eventual** con el inventario.
+
+## ✅ Alcance cubierto en este workspace
+
+- Registro en Eureka mediante `spring-cloud-starter-netflix-eureka-client`.
+- Endpoint REST protegido con JWT.
+- Persistencia de pedidos en H2.
+- Publicación de evento `order.created` en RabbitMQ.
+- Consumo de evento desde `inventory.updated.queue`.
+
+## ⚠️ Falta para completar toda la consigna
+
+- `config-server`
+- `eureka`
+- `gateway`
+- `auth`
+- `inventory`
+- `notification`
+- Flujo end-to-end con broker y gateway levantados juntos
 
 ---
 
