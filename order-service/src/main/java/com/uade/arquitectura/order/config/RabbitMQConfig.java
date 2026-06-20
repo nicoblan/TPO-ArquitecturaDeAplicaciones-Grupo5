@@ -1,6 +1,9 @@
 package com.uade.arquitectura.order.config;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,22 +11,37 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String ORDER_CREATED_QUEUE = "order.created.queue";
+    // Order Events
+    public static final String ORDER_EVENTS_EXCHANGE = "order.events";
+    public static final String ORDER_CREATED_ROUTING_KEY = "order.created";
+
+    // Inventory Events
+    public static final String INVENTORY_EVENTS_EXCHANGE = "inventory.events";
     public static final String INVENTORY_UPDATED_QUEUE = "inventory.updated.queue";
-    public static final String ORDER_EXCHANGE = "order.exchange";
+    public static final String INVENTORY_UPDATED_ROUTING_KEY = "inventory.updated";
+
+    // Order Exchange & Queues
+    @Bean
+    public TopicExchange orderExchange() {
+        return new TopicExchange(ORDER_EVENTS_EXCHANGE, true, false);
+    }
+
+    // Inventory Exchange & Queue
+    @Bean
+    public TopicExchange inventoryExchange() {
+        return new TopicExchange(INVENTORY_EVENTS_EXCHANGE, true, false);
+    }
 
     @Bean
-    public Queue orderCreatedQueue() { return new Queue(ORDER_CREATED_QUEUE); }
+    public Queue inventoryUpdatedQueue() {
+        return new Queue(INVENTORY_UPDATED_QUEUE, true);
+    }
 
     @Bean
-    public Queue inventoryUpdatedQueue() { return new Queue(INVENTORY_UPDATED_QUEUE); }
-
-    @Bean
-    public TopicExchange orderExchange() { return new TopicExchange(ORDER_EXCHANGE); }
-
-    @Bean
-    public Binding bindingOrderCreated(Queue orderCreatedQueue, TopicExchange orderExchange) {
-        return BindingBuilder.bind(orderCreatedQueue).to(orderExchange).with("order.created");
+    public Binding inventoryBinding(Queue inventoryUpdatedQueue, TopicExchange inventoryExchange) {
+        return BindingBuilder.bind(inventoryUpdatedQueue)
+                .to(inventoryExchange)
+                .with(INVENTORY_UPDATED_ROUTING_KEY);
     }
 
     @Bean

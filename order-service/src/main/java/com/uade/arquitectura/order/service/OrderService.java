@@ -1,12 +1,13 @@
 package com.uade.arquitectura.order.service;
 
-import com.uade.arquitectura.order.domain.Order;
-import com.uade.arquitectura.order.repository.OrderRepository;
+import java.util.UUID;
+
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import com.uade.arquitectura.order.domain.Order;
+import com.uade.arquitectura.order.repository.OrderRepository;
 
 @Service
 public class OrderService {
@@ -25,8 +26,8 @@ public class OrderService {
         order.setStatus("PENDING");
         Order savedOrder = orderRepository.save(order);
 
-        // Publicar evento para Notification Service e Inventory Service
-        rabbitTemplate.convertAndSend("order.exchange", "order.created", savedOrder);
+        // Publicar evento order.created para que inventory y notification lo consuman
+        rabbitTemplate.convertAndSend("order.events", "order.created", savedOrder);
         
         return savedOrder;
     }

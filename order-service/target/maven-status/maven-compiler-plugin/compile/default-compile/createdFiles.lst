@@ -1,0 +1,10 @@
+com\uade\arquitectura\order\security\JwtAuthenticationFilter.class
+com\uade\arquitectura\order\domain\Order.class
+com\uade\arquitectura\order\config\RabbitMQConfig.class
+com\uade\arquitectura\order\domain\Order$Builder.class
+com\uade\arquitectura\order\controller\OrderController.class
+com\uade\arquitectura\order\config\SecurityConfig.class
+com\uade\arquitectura\order\messaging\InventoryConsumer.class
+com\uade\arquitectura\order\OrderServiceApplication.class
+com\uade\arquitectura\order\service\OrderService.class
+com\uade\arquitectura\order\repository\OrderRepository.class
