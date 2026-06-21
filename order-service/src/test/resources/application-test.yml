@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     url: jdbc:h2:mem:orderdb-test;DB_CLOSE_DELAY=-1
     username: sa
@@ -19,6 +21,11 @@ spring:
 eureka:
   client:
     enabled: false
+
+management:
+  health:
+    rabbit:
+      enabled: false
 
 jwt:
   secret: test-secret-for-order-service-hs256-32chars-minimum

@@ -17,9 +17,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String ORDER_EXCHANGE = "order.exchange";
+    public static final String ORDER_EXCHANGE = "order.events";
     public static final String ORDER_CREATED_ROUTING_KEY = "order.created";
-    public static final String INVENTORY_EXCHANGE = "inventory.exchange";
+    public static final String INVENTORY_EXCHANGE = "inventory.events";
     public static final String INVENTORY_UPDATED_ROUTING_KEY = "inventory.updated";
     public static final String INVENTORY_UPDATED_QUEUE = "order.inventory-updated.queue";
 

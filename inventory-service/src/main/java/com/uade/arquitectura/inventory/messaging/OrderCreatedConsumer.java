@@ -6,6 +6,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.uade.arquitectura.inventory.event.OrderCreatedEvent;
+
 @Component
 public class OrderCreatedConsumer {
 
@@ -15,35 +17,17 @@ public class OrderCreatedConsumer {
     private InventoryPublisher inventoryPublisher;
 
     @RabbitListener(queues = "order.created.queue")
-    public void handleOrderCreated(String message) {
-        logger.info("Recibido evento order.created: {}", message);
-        
-        // Simular procesamiento del inventario
-        try {
-            // En una implementación real, parseríamos el JSON y actualizaríamos el inventario
-            String orderId = extractOrderId(message);
-            
-            // Simular reserva de inventario (siempre exitosa en la demo)
-            inventoryPublisher.publishInventoryUpdated(orderId, "RESERVED", 1);
-            
-            logger.info("Inventario reservado para orden: {}", orderId);
-        } catch (Exception e) {
-            logger.error("Error procesando orden", e);
-            // Publicar evento de fallo
-            inventoryPublisher.publishInventoryUpdated("unknown", "FAILED", 0);
-        }
-    }
+    public void handleOrderCreated(OrderCreatedEvent event) {
+        logger.info("Recibido evento order.created: orderId={}, skuCode={}, quantity={}",
+                event.orderId(), event.skuCode(), event.quantity());
 
-    private String extractOrderId(String message) {
-        // Buscar orderId en el JSON
-        int start = message.indexOf("\"orderId\"");
-        if (start != -1) {
-            int valueStart = message.indexOf(":", start) + 1;
-            int valueEnd = message.indexOf("\"", valueStart + 1);
-            if (valueEnd > valueStart) {
-                return message.substring(valueStart, valueEnd).replaceAll("[^a-zA-Z0-9-]", "");
-            }
+        try {
+            // Simulación de reserva de inventario (siempre exitosa en la demo)
+            inventoryPublisher.publishInventoryUpdated(event.orderId(), true, "Stock reservado");
+            logger.info("Inventario reservado para orden: {}", event.orderId());
+        } catch (Exception e) {
+            logger.error("Error procesando orden {}", event.orderId(), e);
+            inventoryPublisher.publishInventoryUpdated(event.orderId(), false, "Error al reservar stock");
         }
-        return "unknown";
     }
 }

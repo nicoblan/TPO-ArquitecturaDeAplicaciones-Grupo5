@@ -97,6 +97,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_PROFILES_ACTIVE: docker
+      JWT_SECRET: "MiClaveSecretaSuperSeguraQueDebeCoincidirConLaDeAuthService123456"
 
   inventory-service:
     build:

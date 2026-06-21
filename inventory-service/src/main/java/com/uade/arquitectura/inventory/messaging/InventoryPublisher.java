@@ -1,5 +1,7 @@
 package com.uade.arquitectura.inventory.messaging;
 
+import java.time.Instant;
+
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,8 +12,8 @@ public class InventoryPublisher {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    public void publishInventoryUpdated(String orderId, String status, int quantityReserved) {
-        InventoryUpdatedEvent event = new InventoryUpdatedEvent(orderId, status, quantityReserved);
+    public void publishInventoryUpdated(Long orderId, boolean stockAvailable, String reason) {
+        InventoryUpdatedEvent event = new InventoryUpdatedEvent(orderId, stockAvailable, reason, Instant.now());
         rabbitTemplate.convertAndSend(
                 "inventory.events",
                 "inventory.updated",
@@ -19,22 +21,11 @@ public class InventoryPublisher {
         );
     }
 
-    public static class InventoryUpdatedEvent {
-        public String orderId;
-        public String status;
-        public int quantityReserved;
-        public long timestamp;
-
-        public InventoryUpdatedEvent(String orderId, String status, int quantityReserved) {
-            this.orderId = orderId;
-            this.status = status;
-            this.quantityReserved = quantityReserved;
-            this.timestamp = System.currentTimeMillis();
-        }
-
-        public String getOrderId() { return orderId; }
-        public String getStatus() { return status; }
-        public int getQuantityReserved() { return quantityReserved; }
-        public long getTimestamp() { return timestamp; }
+    public record InventoryUpdatedEvent(
+            Long orderId,
+            boolean stockAvailable,
+            String reason,
+            Instant processedAt
+    ) {
     }
 }

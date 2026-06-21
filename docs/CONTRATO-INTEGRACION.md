@@ -80,7 +80,7 @@ Si no existe, responde `404 Not Found`.
 
 ## Evento publicado por order-service
 
-- Exchange: `order.exchange`
+- Exchange: `order.events`
 - Routing key: `order.created`
 - Tipo logico: `OrderCreatedEvent`
 
@@ -98,7 +98,7 @@ JSON:
 
 ## Evento consumido por order-service
 
-- Exchange: `inventory.exchange`
+- Exchange: `inventory.events`
 - Queue: `order.inventory-updated.queue`
 - Routing key: `inventory.updated`
 - Tipo logico: `InventoryUpdatedEvent`
